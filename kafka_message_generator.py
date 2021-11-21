@@ -11,7 +11,7 @@ class KafkaMessageGenerator:
     def __init__(self):
         p = Properties()
         p.load(open('./conf/kafka.properties'))
-        self.producer = KafkaProducer(bootstrap_servers=[p['bootstrap.servers']])
+        self.producer = KafkaProducer(bootstrap_servers=[p['bootstrap.servers.local']])
 
     def publish(self, topic, command):
         headers = [("ce-type",b"com.example.TemperatureChangeCommand"),("ce-specversion",b"1.0"),("ce-datacontenttype",b"application/protobuf")]
