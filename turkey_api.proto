@@ -14,7 +14,7 @@ message CookingCommand {
 }
 message TemperatureChangeCommand {
     string turkey_id = 1 [(akkaserverless.field).entity_key = true];
-    float new_temperature = 2;
+    float temperature_change = 2;
 }
 
 message GetTurkeyCommand {
@@ -30,6 +30,17 @@ service TurkeyService {
     rpc EndCooking(CookingCommand) returns (google.protobuf.Empty);
     rpc IncreaseOvenTemperature(TemperatureChangeCommand) returns (google.protobuf.Empty);
     rpc DecreaseOvenTemperature(TemperatureChangeCommand) returns (google.protobuf.Empty);
+
+    rpc IncreaseTurkeyTemperature(TemperatureChangeCommand) returns (google.protobuf.Empty) {
+        option (akkaserverless.method).eventing.in = {
+            topic: "increase_temp"
+        };
+    }
+    rpc DecreaseTurkeyTemperature(TemperatureChangeCommand) returns (google.protobuf.Empty) {
+        option (akkaserverless.method).eventing.in = {
+            topic: "decrease_temp"
+        };
+    }
 
     rpc GetCurrentTurkey(GetTurkeyCommand) returns (domain.TurkeyState) {
         option (google.api.http) = {

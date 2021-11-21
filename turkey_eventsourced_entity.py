@@ -37,13 +37,25 @@ def end_cooking(state: TurkeyState, command: CookingCommand, context: EventSourc
 
 @entity.command_handler("IncreaseOvenTemperature")
 def increase_oven_temperature(state: TurkeyState, command: TemperatureChangeCommand, context: EventSourcedCommandContext):
-    np = TemperatureChange(turkey_id= command.turkey_id, type=TemperatureChange.Type.EXTERNAL, new_temperature=command.new_temperature)
+    np = TemperatureChange(turkey_id= command.turkey_id, type=TemperatureChange.Type.EXTERNAL, new_temperature=(state.external_temperature + command.temperature_change))
     context.emit(np)
     return Empty()
 
 @entity.command_handler("DecreaseOvenTemperature")
 def decrease_oven_temperature(state: TurkeyState, command: TemperatureChangeCommand, context: EventSourcedCommandContext):
-    np = TemperatureChange(turkey_id= command.turkey_id, type=TemperatureChange.Type.EXTERNAL, new_temperature=command.new_temperature)
+    np = TemperatureChange(turkey_id= command.turkey_id, type=TemperatureChange.Type.EXTERNAL, new_temperature=(state.external_temperature - command.temperature_change))
+    context.emit(np)
+    return Empty()
+
+@entity.command_handler("IncreaseTurkeyTemperature")
+def increase_turkey_temperature(state: TurkeyState, command: TemperatureChangeCommand, context: EventSourcedCommandContext):
+    np = TemperatureChange(turkey_id= command.turkey_id, type=TemperatureChange.Type.INTERNAL, new_temperature=(state.internal_temperature + command.temperature_change))
+    context.emit(np)
+    return Empty()
+
+@entity.command_handler("DecreaseTurkeyTemperature")
+def decrease_turkey_temperature(state: TurkeyState, command: TemperatureChangeCommand, context: EventSourcedCommandContext):
+    np = TemperatureChange(turkey_id= command.turkey_id, type=TemperatureChange.Type.INTERNAL, new_temperature=(state.internal_temperature - command.temperature_change))
     context.emit(np)
     return Empty()
 
