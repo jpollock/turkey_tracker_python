@@ -14,7 +14,7 @@ message CookingCommand {
 }
 message TemperatureChangeCommand {
     string turkey_id = 1 [(akkaserverless.field).entity_key = true];
-    float new_temperature = 2;
+    float temperature_change = 2;
 }
 
 message GetTurkeyCommand {
