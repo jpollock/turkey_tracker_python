@@ -21,7 +21,7 @@ message TurkeyState {
         PERFECT = 4;
     }
     DoneStatus done = 2;
-    float internal_temperature = 3;
+    float external_temperature = 3;
 
 }
 
