@@ -37,13 +37,13 @@ def end_cooking(state: TurkeyState, command: CookingCommand, context: EventSourc
 
 @entity.command_handler("IncreaseOvenTemperature")
 def increase_oven_temperature(state: TurkeyState, command: TemperatureChangeCommand, context: EventSourcedCommandContext):
-    np = TemperatureChange(turkey_id= command.turkey_id, type=TemperatureChange.Type.EXTERNAL, new_temperature=(state.external_temperature + command.temperature_change))
+    np = TemperatureChange(turkey_id= command.turkey_id, new_temperature=(state.external_temperature + command.temperature_change))
     context.emit(np)
     return Empty()
 
 @entity.command_handler("DecreaseOvenTemperature")
 def decrease_oven_temperature(state: TurkeyState, command: TemperatureChangeCommand, context: EventSourcedCommandContext):
-    np = TemperatureChange(turkey_id= command.turkey_id, type=TemperatureChange.Type.EXTERNAL, new_temperature=(state.external_temperature - command.temperature_change))
+    np = TemperatureChange(turkey_id= command.turkey_id, new_temperature=(state.external_temperature - command.temperature_change))
     context.emit(np)
     return Empty()
 
@@ -63,8 +63,5 @@ def out_of_oven(state: TurkeyState, event: OutOfOven ):
 
 @entity.event_handler(TemperatureChange)
 def temperature_changed(state: TurkeyState, event: TemperatureChange ):
-    if event.type == TemperatureChange.Type.EXTERNAL:
-        state.external_temperature = event.new_temperature
-    elif event.type == TemperatureChange.Type.INTERNAL:
-        state.internal_temperature = event.new_temperature
+    state.external_temperature = event.new_temperature
     return state
